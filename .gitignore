@@ -1,2 +1,4 @@
 /suminagashi/__pycache__
 .DS_Store
+site/
+__pycache__/

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Ink rings">
+  <rect width="32" height="32" rx="6" fill="#f5f2eb"/>
+  <circle cx="16" cy="16" r="12" fill="#1a2350"/><circle cx="16" cy="16" r="9.5" fill="#f5f2eb"/>
+  <circle cx="16" cy="16" r="7.5" fill="#0f0f0f"/><circle cx="16" cy="16" r="5" fill="#f5f2eb"/>
+  <circle cx="16" cy="16" r="3" fill="#b4505f"/>
+</svg>

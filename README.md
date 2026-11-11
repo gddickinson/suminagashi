@@ -92,6 +92,38 @@ suminagashi_app/
     └── main_window.py          # Main window assembly
 ```
 
+## Web version
+
+**Live:** https://gddickinson.github.io/suminagashi/ (static GitHub Pages site; the simulator runs in your browser)
+
+The web version is a JavaScript port of the same engine, presets and canvas tools (`suminagashi/web/static/`),
+checked against the Python package: seeded presets and a scripted tool session give the identical operation lists
+and pixel-identical renders (the **Verify** page and `tests/test_web.py`).
+
+| Page | What it does |
+|------|--------------|
+| **Studio** | The full simulator: 10 palettes, the five tools, 6 presets, 5 canvas sizes, undo, PNG export (also at 2×) |
+| **Presets** | Every preset in any palette, seeded, with "Open in studio" |
+| **Verify** | Python vs JavaScript, side by side, with the differences measured |
+| **About** | The transforms, the tools, how to run both apps |
+
+![Home](docs/img/home.png)
+![Studio](docs/img/studio.png)
+![Presets](docs/img/presets.png)
+![Verify](docs/img/verify.png)
+
+### Run the web app
+
+```bash
+pip install -r requirements-web.txt
+python run_web.py                  # http://127.0.0.1:8137
+```
+
+The local app adds a "Render with Python" button in the studio (`POST /api/render`: the numpy engine renders the
+studio's operation list and the page reports how many pixels differ). Build the static site with
+`python scripts/build_static.py` (output in `site/`); `.github/workflows/pages.yml` tests and publishes it on every
+push to `main`. Tests: `python -m pytest -q tests/` (the web tests also run the node test of the JS port).
+
 ## Palettes
 
 10 built-in palettes: Traditional, Sumi Ink, Indigo, Autumn, Ocean,

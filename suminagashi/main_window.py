@@ -25,11 +25,11 @@ from . import __version__
 from .canvas import MarblingCanvas
 from .controls import ControlPanel
 from .engine import MarblingEngine
+from .ui_specs import CANVAS_SIZES, DEFAULT_CANVAS_SIZE
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_WIDTH = 600
-DEFAULT_HEIGHT = 600
+DEFAULT_WIDTH, DEFAULT_HEIGHT = DEFAULT_CANVAS_SIZE
 
 
 class MainWindow(QMainWindow):
@@ -111,13 +111,7 @@ class MainWindow(QMainWindow):
 
         # Canvas size menu
         canvas_menu = menu.addMenu("&Canvas")
-        for label, w, h in [
-            ("Small (400×400)", 400, 400),
-            ("Medium (600×600)", 600, 600),
-            ("Large (800×800)", 800, 800),
-            ("Wide (900×600)", 900, 600),
-            ("Tall (600×900)", 600, 900),
-        ]:
+        for label, w, h in CANVAS_SIZES:
             action = QAction(label, self)
             action.setData((w, h))
             action.triggered.connect(self._on_canvas_resize)

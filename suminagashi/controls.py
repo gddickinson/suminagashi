@@ -31,6 +31,7 @@ from PyQt5.QtWidgets import (
 from .canvas import MarblingCanvas
 from .palettes import PALETTES, Palette, get_palette, list_palettes
 from .presets import PRESETS, apply_preset, list_presets
+from .ui_specs import PRESET_LABELS, SLIDER_BY_KEY, TOOL_SLIDERS, TOOLS
 
 logger = logging.getLogger(__name__)
 
@@ -83,6 +84,12 @@ class LabelledSlider(QWidget):
 
     def setValue(self, v: int) -> None:
         self._slider.setValue(v)
+
+
+def _slider_args(key: str) -> tuple:
+    """LabelledSlider arguments from the shared spec in ui_specs.py."""
+    s = SLIDER_BY_KEY[key]
+    return (s.label, s.min_val, s.max_val, s.initial, s.suffix)
 
 
 # ---------------------------------------------------------------------------
@@ -143,13 +150,7 @@ class ControlPanel(QWidget):
         tg_layout = QVBoxLayout(tool_group)
 
         self._tool_group = QButtonGroup(self)
-        tools = [
-            (MarblingCanvas.TOOL_DROP, "Drop — single ink drop"),
-            (MarblingCanvas.TOOL_RING, "Rings — concentric drops"),
-            (MarblingCanvas.TOOL_BLOW, "Blow — radial push (drag)"),
-            (MarblingCanvas.TOOL_VORTEX, "Swirl — vortex (drag)"),
-            (MarblingCanvas.TOOL_COMB, "Comb — tine stroke (drag)"),
-        ]
+        tools = [(key, desc) for key, _name, desc in TOOLS]
         for i, (key, desc) in enumerate(tools):
             rb = QRadioButton(desc)
             rb.setProperty("tool_key", key)
@@ -165,34 +166,34 @@ class ControlPanel(QWidget):
         param_group = QGroupBox("Parameters")
         self._param_layout = QVBoxLayout(param_group)
 
-        self._drop_radius = LabelledSlider("Drop Radius", 3, 80, 30, " px")
+        self._drop_radius = LabelledSlider(*_slider_args("drop_radius"))
         self._drop_radius.valueChanged.connect(
             lambda v: setattr(self.canvas, "drop_radius", float(v))
         )
         self._param_layout.addWidget(self._drop_radius)
 
-        self._ring_count = LabelledSlider("Ring Count", 3, 40, 10)
+        self._ring_count = LabelledSlider(*_slider_args("ring_count"))
         self._ring_count.valueChanged.connect(
             lambda v: setattr(self.canvas, "ring_count", v)
         )
         self._param_layout.addWidget(self._ring_count)
         self._ring_count.hide()
 
-        self._ring_spacing = LabelledSlider("Ring Spacing", 3, 40, 12, " px")
+        self._ring_spacing = LabelledSlider(*_slider_args("ring_spacing"))
         self._ring_spacing.valueChanged.connect(
             lambda v: setattr(self.canvas, "ring_spacing", float(v))
         )
         self._param_layout.addWidget(self._ring_spacing)
         self._ring_spacing.hide()
 
-        self._blow_strength = LabelledSlider("Strength", 5, 120, 40)
+        self._blow_strength = LabelledSlider(*_slider_args("blow_strength"))
         self._blow_strength.valueChanged.connect(
             lambda v: setattr(self.canvas, "blow_strength", float(v))
         )
         self._param_layout.addWidget(self._blow_strength)
         self._blow_strength.hide()
 
-        self._comb_strength = LabelledSlider("Comb Width", 10, 150, 60, " px")
+        self._comb_strength = LabelledSlider(*_slider_args("comb_strength"))
         self._comb_strength.valueChanged.connect(
             lambda v: setattr(self.canvas, "comb_strength", float(v))
         )
@@ -204,14 +205,7 @@ class ControlPanel(QWidget):
         # ── Presets ───────────────────────────────────────────────────────
         preset_group = QGroupBox("Presets")
         preset_layout = QGridLayout(preset_group)
-        preset_names = {
-            "concentric": "Concentric",
-            "scattered": "Scattered",
-            "blown": "Wind-Blown",
-            "combed": "Combed",
-            "vortex_rings": "Vortex Rings",
-            "stone": "Stone",
-        }
+        preset_names = PRESET_LABELS
         col = 0
         row = 0
         for key in list_presets():
@@ -327,11 +321,9 @@ class ControlPanel(QWidget):
         self.canvas.tool = key
 
         # Show/hide relevant parameter sliders
-        self._drop_radius.setVisible(key in (MarblingCanvas.TOOL_DROP, MarblingCanvas.TOOL_RING))
-        self._ring_count.setVisible(key == MarblingCanvas.TOOL_RING)
-        self._ring_spacing.setVisible(key == MarblingCanvas.TOOL_RING)
-        self._blow_strength.setVisible(key in (MarblingCanvas.TOOL_BLOW, MarblingCanvas.TOOL_VORTEX))
-        self._comb_strength.setVisible(key == MarblingCanvas.TOOL_COMB)
+        shown = TOOL_SLIDERS.get(key, [])
+        for skey in SLIDER_BY_KEY:
+            getattr(self, "_" + skey).setVisible(skey in shown)
 
     def _on_preset_clicked(self) -> None:
         btn = self.sender()

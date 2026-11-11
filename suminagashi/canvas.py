@@ -18,6 +18,8 @@ from PyQt5.QtGui import QColor, QImage, QPainter, QPen, QPixmap, QCursor
 from PyQt5.QtWidgets import QWidget
 
 from .engine import MarblingEngine
+from .tool_ops import add_rings, drag_step
+from .ui_specs import slider_default
 
 logger = logging.getLogger(__name__)
 
@@ -82,11 +84,11 @@ class MarblingCanvas(QWidget):
 
         # Tool state
         self.tool = self.TOOL_DROP
-        self.drop_radius = 30.0
-        self.ring_count = 10
-        self.ring_spacing = 12.0
-        self.blow_strength = 40.0
-        self.comb_strength = 60.0
+        self.drop_radius = float(slider_default("drop_radius"))
+        self.ring_count = slider_default("ring_count")
+        self.ring_spacing = float(slider_default("ring_spacing"))
+        self.blow_strength = float(slider_default("blow_strength"))
+        self.comb_strength = float(slider_default("comb_strength"))
         self.ink_colors: list = [(0, 0, 0)]
         self._color_index = 0
 
@@ -144,14 +146,8 @@ class MarblingCanvas(QWidget):
             self.request_render()
 
         elif self.tool == self.TOOL_RING:
-            colors = self.ink_colors
-            rng = np.random.default_rng()
-            for i in range(self.ring_count):
-                c = colors[i % len(colors)]
-                r = self.ring_spacing + rng.uniform(-2, 2)
-                dx = rng.uniform(-2, 2)
-                dy = rng.uniform(-2, 2)
-                self.engine.add_drop(pos.x() + dx, pos.y() + dy, r, c)
+            add_rings(self.engine, pos.x(), pos.y(), self.ink_colors,
+                      self.ring_count, self.ring_spacing)
             self._emit_count()
             self.request_render()
 
@@ -167,37 +163,13 @@ class MarblingCanvas(QWidget):
             return
 
         pos = self._canvas_pos(QPointF(event.pos()))
-        dx = pos.x() - self._last_pos.x()
-        dy = pos.y() - self._last_pos.y()
-        dist = (dx * dx + dy * dy) ** 0.5
-
-        if dist < 3:
+        moved = drag_step(
+            self.engine, self.tool,
+            (self._last_pos.x(), self._last_pos.y()), (pos.x(), pos.y()),
+            self.blow_strength, self.comb_strength,
+        )
+        if moved is None:
             return
-
-        if self.tool == self.TOOL_BLOW:
-            self.engine.add_blow(
-                self._last_pos.x(), self._last_pos.y(),
-                self.blow_strength * 0.7, self.blow_strength * 2,
-            )
-
-        elif self.tool == self.TOOL_VORTEX:
-            cx = self.engine.width / 2
-            cy = self.engine.height / 2
-            cross = dx * (pos.y() - cy) - dy * (pos.x() - cx)
-            sign = 1.0 if cross > 0 else -1.0
-            self.engine.add_vortex(
-                pos.x(), pos.y(),
-                sign * 0.3 * (self.blow_strength / 40.0),
-                self.blow_strength * 2.5,
-            )
-
-        elif self.tool == self.TOOL_COMB:
-            import math
-            angle = math.atan2(dy, dx)
-            self.engine.add_stroke(
-                self._last_pos.x(), self._last_pos.y(),
-                angle, self.comb_strength * 0.8, self.comb_strength * 0.6,
-            )
 
         self._last_pos = pos
         self._emit_count()
