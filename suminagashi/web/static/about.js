@@ -34,10 +34,12 @@ route('about', async () => {
   <div class="scroll"><table><thead><tr><th>Tool</th><th>Action</th><th>What it adds</th></tr></thead><tbody>
     <tr><td>Drop</td><td>Click</td><td>One drop of the Drop Radius, colours cycling through the palette</td></tr>
     <tr><td>Rings</td><td>Click</td><td>Ring Count drops of radius Ring Spacing ± 2 px, jittered ± 2 px: classic suminagashi</td></tr>
-    <tr><td>Blow</td><td>Drag</td><td>A blow (strength 0.7 × Strength, falloff 2 × Strength) for every 3 px moved</td></tr>
-    <tr><td>Swirl</td><td>Drag</td><td>A vortex (0.3 × Strength / 40 rad, falloff 2.5 × Strength) turning with the drag around the canvas centre</td></tr>
-    <tr><td>Comb</td><td>Drag</td><td>A stroke along the drag (0.8 × Comb Width, falloff 0.6 × Comb Width)</td></tr>
+    <tr><td>Blow</td><td>Drag</td><td>Blows (strength 0.7 × Strength per 48 px dragged, falloff 2 × Strength) along the drag</td></tr>
+    <tr><td>Swirl</td><td>Drag</td><td>Vortices (0.3 × Strength / 40 rad per 48 px dragged, falloff 2.5 × Strength) turning with the drag around the canvas centre</td></tr>
+    <tr><td>Comb</td><td>Drag</td><td>Strokes along the drag (0.8 × Comb Width per 48 px dragged, falloff 0.6 × Comb Width): at the default width the ink at the tine moves about as far as you drag</td></tr>
   </tbody></table></div>
+  <p class="small mute">Drag operations are added for every 3 px moved (split into sub-steps of at most 8 px) and scaled by
+  the distance, so a drag has the same effect whether it is fast or slow.</p>
   <p>Presets: ${list(presets, p => `<b>${esc(p.label)}</b> (${esc(p.doc.replace(/\.$/, ''))})`, '; ')}.
   Canvas sizes: ${list(ui.canvas_sizes, s => esc(s.label), ', ')}.</p>
   <p class="small mute">Shortcuts (desktop and studio): Ctrl+S save PNG, Ctrl+Z undo, Ctrl+Shift+X clear. The web studio

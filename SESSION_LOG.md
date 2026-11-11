@@ -31,9 +31,7 @@
 - Docs: README project tree and ROADMAP "Current State" corrected.
 
 ### Left for George (not changed)
-- Blow, Swirl and Comb add one operation per mouse-move step of >= 3 px, each with the full strength (e.g. comb
-  0.8 x Comb Width = 48 px), so the displacement of a drag depends on how many move events arrive, and a fast
-  diagonal comb drag can push ink off the canvas. Scaling by distance moved would change the look of every drag.
+- (Drag strength per mouse event: decided and fixed, see below.)
 - The inverse stroke/blow/vortex used for rendering subtract the displacement evaluated at the traced point, an
   approximation of the exact inverse (the drop inverse is exact).
 - `canvas.py` stretches the render to the widget (`_canvas_pos` comment says "maintain aspect ratio" but it does
@@ -43,3 +41,13 @@
 - Closing a `MainWindow` while its canvas `RenderThread` is still running can abort Python ("QThread destroyed
   while thread is still running"); seen intermittently in `tests/test_gui.py`, which now waits for the render to
   finish. Already listed in ROADMAP Technical Debt (clean thread termination on window close).
+
+## 2026-11-11 (later): drag tools scale with the distance dragged (approved by George)
+- Fixed: Blow, Swirl and Comb added one full-strength operation per mouse-move step of >= 3 px (comb 48 px at the
+  default width), so a drag's effect depended on the mouse-event rate and a fast comb drag pushed the ink off the
+  canvas. `tool_ops.drag_step` now scales each operation by distance moved / `REF_DRAG_DIST` (48 px; at the default
+  Comb Width the ink at the tine moves about as far as the drag) and splits moves longer than `MAX_SUBSTEP` (8 px)
+  into equal sub-steps. Desktop and web share it (`marble_tools.js` ported, fixture regenerated: JS still
+  identical, 0 pixels differ). Regression test `tests/test_tool_ops.py`: 4-event vs 80-event drags give the same
+  total strength and < 1% differing pixels (comb identical); a 100 px comb drag applies ~100 px. It failed on the
+  old code. Drags are now gentler than before (by design); presets are unaffected.

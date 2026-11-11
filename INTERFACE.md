@@ -7,7 +7,7 @@
 | `__main__.py` | `python -m suminagashi` entry | |
 | `app.py` | CLI argument parsing & Qt launch | `main()`, `_parse_args()` |
 | `engine.py` | Numpy-vectorised marbling physics | `MarblingEngine`, `Operation`, `OpType` |
-| `tool_ops.py` | Qt-free tool logic: Rings click and Blow/Swirl/Comb drag steps (used by `canvas.py` and ported to JS) | `add_rings()`, `drag_step()`, `MIN_DRAG_DIST` |
+| `tool_ops.py` | Qt-free tool logic: Rings click and Blow/Swirl/Comb drag steps (used by `canvas.py` and ported to JS) | `add_rings()`, `drag_step()`, `MIN_DRAG_DIST`, `REF_DRAG_DIST`, `MAX_SUBSTEP` |
 | `ui_specs.py` | Qt-free UI tables shared by the desktop panel and the web API: tools, sliders, preset labels, canvas sizes | `TOOLS`, `SLIDERS`, `TOOL_SLIDERS`, `PRESET_LABELS`, `CANVAS_SIZES` |
 | `canvas.py` | Qt render thread & display widget | `MarblingCanvas`, `RenderThread` |
 | `controls.py` | Control panel (tools, palette, presets) | `ControlPanel`, `LabelledSlider` |
@@ -51,6 +51,7 @@
 | `tests/test_engine.py` | Engine unit tests (drop transform, stroke, blow, vortex, render) |
 | `tests/test_gui.py` | Offscreen Qt: default palette at start-up, Rings tool sliders (skipped without PyQt5) |
 | `tests/test_ui_specs.py` | Each tool shows exactly the sliders it uses |
+| `tests/test_tool_ops.py` | Drag tools: same effect for fast and slow drags, displacement follows drag length |
 | `tests/test_packaging.py` | pyproject build backend is importable |
 | `tests/test_web.py` | Every API endpoint, static build, UI/palettes/presets from the package, `/render` = engine, fixture up to date, runs the node test |
 
