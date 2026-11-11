@@ -49,6 +49,9 @@
 | File | Purpose |
 |---|---|
 | `tests/test_engine.py` | Engine unit tests (drop transform, stroke, blow, vortex, render) |
+| `tests/test_gui.py` | Offscreen Qt: default palette at start-up, Rings tool sliders (skipped without PyQt5) |
+| `tests/test_ui_specs.py` | Each tool shows exactly the sliders it uses |
+| `tests/test_packaging.py` | pyproject build backend is importable |
 | `tests/test_web.py` | Every API endpoint, static build, UI/palettes/presets from the package, `/render` = engine, fixture up to date, runs the node test |
 
 ## Archive
