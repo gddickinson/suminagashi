@@ -29,7 +29,7 @@ from PyQt5.QtWidgets import (
 )
 
 from .canvas import MarblingCanvas
-from .palettes import PALETTES, Palette, get_palette, list_palettes
+from .palettes import DEFAULT_PALETTE, PALETTES, Palette, get_palette, list_palettes
 from .presets import PRESETS, apply_preset, list_presets
 from .ui_specs import PRESET_LABELS, SLIDER_BY_KEY, TOOL_SLIDERS, TOOLS
 
@@ -134,7 +134,7 @@ class ControlPanel(QWidget):
         self._palette_combo = QComboBox()
         for key in list_palettes():
             self._palette_combo.addItem(PALETTES[key].name, key)
-        self._palette_combo.setCurrentIndex(0)
+        self._palette_combo.setCurrentIndex(max(0, self._palette_combo.findData(DEFAULT_PALETTE)))
         self._palette_combo.currentIndexChanged.connect(self._on_palette_changed)
         pg_layout.addWidget(self._palette_combo)
 

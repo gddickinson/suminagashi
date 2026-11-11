@@ -258,9 +258,9 @@ def main() -> None:
 
     # Apply initial preset if specified
     if args.preset:
-        from .palettes import get_palette
+        from .palettes import DEFAULT_PALETTE, get_palette
         from .presets import apply_preset
-        pal_key = args.palette or "traditional"
+        pal_key = args.palette or DEFAULT_PALETTE
         pal = get_palette(pal_key)
         try:
             apply_preset(args.preset, window.engine, pal)
