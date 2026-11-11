@@ -77,19 +77,26 @@ python run_suminagashi.py -v
 ## Project Structure
 
 ```
-suminagashi_app/
+suminagashi/                    # repository root
 ├── run_suminagashi.py          # Quick launcher
+├── run_web.py                  # Web app (see "Web version")
+├── pyproject.toml
 ├── README.md
-└── suminagashi/
-    ├── __init__.py             # Package metadata
-    ├── __main__.py             # python -m entry point
-    ├── app.py                  # CLI parsing, dependency checks, Qt launch
-    ├── engine.py               # Core marbling engine (numpy-vectorised)
-    ├── palettes.py             # Colour palette definitions
-    ├── presets.py              # Preset pattern generators
-    ├── canvas.py               # Qt canvas widget + render thread
-    ├── controls.py             # Control panel widget
-    └── main_window.py          # Main window assembly
+├── suminagashi/
+│   ├── __init__.py             # Package metadata
+│   ├── __main__.py             # python -m entry point
+│   ├── app.py                  # CLI parsing, dependency checks, Qt launch
+│   ├── engine.py               # Core marbling engine (numpy-vectorised)
+│   ├── palettes.py             # Colour palette definitions
+│   ├── presets.py              # Preset pattern generators
+│   ├── tool_ops.py             # Tool logic (rings click, blow/swirl/comb drag steps)
+│   ├── ui_specs.py             # Tools, sliders, preset labels, canvas sizes
+│   ├── canvas.py               # Qt canvas widget + render thread
+│   ├── controls.py             # Control panel widget
+│   ├── main_window.py          # Main window assembly
+│   └── web/                    # Web interface and static site
+├── tests/                      # pytest suite
+└── _archive/                   # Original monolith and abandoned JSX port
 ```
 
 ## Web version

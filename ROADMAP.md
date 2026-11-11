@@ -7,7 +7,8 @@ thread), `controls.py` (control panel), `main_window.py`, `palettes.py` (10
 palettes), `presets.py` (6 presets), `app.py` (CLI), and proper `__init__.py` /
 `__main__.py`. Implements Jaffer's area-preserving drop transform with comb,
 blow, and vortex operations. Inverse raster mapping produces crisp boundaries.
-The `original/` directory holds a previous monolith version. No tests, no CI.
+The previous monolith version is archived in `_archive/`. Engine unit tests in `tests/`; a web
+version with a CI workflow (`.github/workflows/pages.yml`) was added on the `web-interface` branch.
 
 ## Short-term Improvements
 - [x] Add unit tests for `engine.py`: verify drop transform preserves area,
@@ -42,8 +43,8 @@ The `original/` directory holds a previous monolith version. No tests, no CI.
       instead of purely geometric transforms for more realistic results
 - [ ] Tablet pressure sensitivity: map pen pressure to drop radius/stroke width
       for Wacom/Apple Pencil users
-- [ ] Web version via WebAssembly (compile engine with Emscripten) or a
-      JavaScript port of the numpy-vectorized engine
+- [x] Web version via WebAssembly (compile engine with Emscripten) or a
+      JavaScript port of the numpy-vectorized engine (done: JavaScript port in suminagashi/web/static/)
 - [ ] 3D marbling: wrap the 2D marble pattern onto 3D surfaces (vases, bowls)
       using UV mapping
 - [ ] Print integration: direct output to art printers at correct DPI/color
