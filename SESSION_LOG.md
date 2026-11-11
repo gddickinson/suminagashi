@@ -40,3 +40,6 @@
   not), so a Wide/Tall canvas appears distorted when the window has a different aspect ratio.
 - `pyproject.toml` pins `numpy<2.0`; the code and tests run unchanged on numpy 2.5.4 (used by the web requirements).
 - The cursor preview ring shows the Drop Radius for every tool, including Rings, Blow, Swirl and Comb.
+- Closing a `MainWindow` while its canvas `RenderThread` is still running can abort Python ("QThread destroyed
+  while thread is still running"); seen intermittently in `tests/test_gui.py`, which now waits for the render to
+  finish. Already listed in ROADMAP Technical Debt (clean thread termination on window close).
