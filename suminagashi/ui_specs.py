@@ -48,7 +48,7 @@ SLIDER_BY_KEY: Dict[str, SliderSpec] = {s.key: s for s in SLIDERS}
 # Which sliders the control panel shows for each tool (ControlPanel._on_tool_changed).
 TOOL_SLIDERS: Dict[str, List[str]] = {
     "drop": ["drop_radius"],
-    "ring": ["drop_radius", "ring_count", "ring_spacing"],
+    "ring": ["ring_count", "ring_spacing"],  # Ring Spacing is the radius of each ring drop
     "blow": ["blow_strength"],
     "vortex": ["blow_strength"],
     "comb": ["comb_strength"],

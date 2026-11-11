@@ -22,3 +22,16 @@ def test_starts_with_default_palette(qapp):
     assert tuple(int(v) for v in w.engine.water_color) == pal.water
     assert w.canvas.ink_colors == list(pal.colors)
     w.close()
+
+
+def test_rings_tool_hides_unused_drop_radius(qapp):
+    """The Rings tool uses Ring Count and Ring Spacing (as the drop radius), not Drop Radius."""
+    from suminagashi.main_window import MainWindow
+    w = MainWindow(200, 200)
+    ctl = w.controls
+    ring = next(b for b in ctl._tool_group.buttons() if b.property("tool_key") == "ring")
+    ring.click()
+    shown = {k for k in ("drop_radius", "ring_count", "ring_spacing", "blow_strength", "comb_strength")
+             if getattr(ctl, "_" + k).isVisibleTo(ctl)}
+    assert shown == {"ring_count", "ring_spacing"}
+    w.close()

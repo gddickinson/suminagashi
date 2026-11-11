@@ -5,10 +5,6 @@ import { esc, list, slider, isStatic } from './core.js';
 export const rgbCss = c => `rgb(${c[0]},${c[1]},${c[2]})`;
 export const swatches = p => list(p.colors, c => `<span class="dot" style="background:${rgbCss(c)}"></span>`);
 
-// The desktop panel also shows "Drop Radius" for the Rings tool although the Rings tool does not use it
-// (it uses Ring Spacing as the drop radius); the web panel hides it there.
-const UNUSED = { ring: ['drop_radius'] };
-
 export function buildPanel(host, studio, act) {
   const d = studio.data, ui = d.ui;
   host.innerHTML = `
@@ -48,7 +44,7 @@ export function buildPanel(host, studio, act) {
     });
     $('#tool-desc').textContent = ui.tools.find(t => t.key === studio.tool).desc;
     const box = $('#sliders'); box.innerHTML = '';
-    const keys = (ui.tool_sliders[studio.tool] || []).filter(k => !(UNUSED[studio.tool] || []).includes(k));
+    const keys = ui.tool_sliders[studio.tool] || [];
     for (const s of ui.sliders.filter(x => keys.includes(x.key))) {
       slider(box, { id: s.key, label: s.label, min: s.min_val, max: s.max_val, value: studio.params[s.key], unit: s.suffix },
         v => { studio.params[s.key] = v; });
